@@ -1,7 +1,7 @@
 #!/bin/bash
 export DCOS_URL=$(dcos config show core.dcos_url)
 echo DCOS_URL: $DCOS_URL
-dcos package install --cli dcos-enterprise-cli
+dcos package install --yes --cli dcos-enterprise-cli
 
 echo Determing public node ip...
 export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )

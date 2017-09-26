@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: cowhands-app3
+  name: thegym-app
 spec:
   replicas: 2
   template:

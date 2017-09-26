@@ -1,0 +1,40 @@
+{
+  "service": {
+    "name": "gitlab",
+    "cpus": 1,
+    "mem": 2048,
+    "role": "*",
+    "host-volume": "/srv/gitlab",
+    "host-shared-volume": "/srv/gitlab-data"
+  },
+  "routing": {
+    "https-redirect": false,
+    "virtual-host": "gitlab.thegym.mesosphere.io",
+    "ssh-port": 22222,
+    "registry-port": 50000
+  },
+  "email": {
+    "enabled": false,
+    "port": 25,
+    "authentication": "login",
+    "enable-starttls-auto": true,
+    "openssl-verify-mode": "peer",
+    "tls": false
+  },
+  "high-availability": {
+    "enabled": false,
+    "postgres": {},
+    "redis": {}
+  },
+  "single-node": {
+    "local-volumes": {
+      "pinned-hostname": "$PINNEDNODE"
+    },
+    "external-volumes": {
+      "enabled": false
+    }
+  },
+  "enterprise": {
+    "enterprise-edition": false
+  }
+}
