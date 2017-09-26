@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: cowhands-app3
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: cowhands
+      labels:
+        app: cowhands
+    spec:
+      containers:
+      - name: cowhands
+        image: digitalemil/cowhands:latest
+        imagePullPolicy: Always
+        args: ["--cassandra-host", "node.cassandra.l4lb.thisdcos.directory:9042"]
+        ports:
+        - containerPort: 3000
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: cowhands-app3
+spec:
+  selector:
+    app: cowhands
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 31099
+  type: NodePort

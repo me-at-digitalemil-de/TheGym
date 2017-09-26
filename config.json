@@ -1,0 +1,109 @@
+{"id":"/dcosappstudio-thegym","groups":[{"id":"/dcosappstudio-thegym/message-backend","apps":[ 
+  {"id":"elastic-ingester-backend","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The  Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","ELASTIC_SERVICE":"http://elastic:changeme@coordinator.elastic.l4lb.thisdcos.directory:9200"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:thegym-elasticingester-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymworkerelastic:80"}}],"requirePorts":false},
+  {"id":"kafka-ingester-backend","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","KAFKA_SERVICE":"master.mesos:2181/dcos-service-kafka"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-kafkaingester-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymworkerkafka:80"}}],"requirePorts":false},{"id":"cassandra-ingester-backend","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","CASSANDRA_SERVICE":"node.cassandra.l4lb.thisdcos.directory:9042"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-cassandraingester-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymworkercassandra:80"}}],"requirePorts":false}]},{"id":"/dcosappstudio-thegym/message-handler","apps":[{"volumes":[],"id":"message-listener","cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}", "TRANSFORMER":"http://dcosappstudio-thegymmessage-transformer.marathon.l4lb.thisdcos.directory:80/transform","VALIDATOR":"http://dcosappstudio-thegymmessage-validator.marathon.l4lb.thisdcos.directory:80/validate","KAFKA_BACKEND":"http://dcosappstudio-thegymworkerkafka.marathon.l4lb.thisdcos.directory:80/data","CASSANDRA_BACKEND":"http://dcosappstudio-thegymworkercassandra.marathon.l4lb.thisdcos.directory:80/data",
+"ELASTIC_BACKEND":"http://dcosappstudio-thegymworkerelastic.marathon.l4lb.thisdcos.directory:80/data"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-messagelistener-v1.0.0","network":"HOST","portMappings":null,"privileged":false,"parameters":[],"forcePullImage":true}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymworkerlistener:80"}}],"requirePorts":false},{
+  "volumes": [],
+  "id": "pmml-service",
+  "cmd": null,
+  "args": null,
+  "user": null,
+  "env": {"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}"},
+  "instances": 1,
+  "cpus": 1,
+  "mem": 2048,
+  "disk": 0,
+  "gpus": 0,
+  "executor": null,
+  "constraints": [],
+  "fetch": null,
+  "storeUrls": null,
+  "backoffSeconds": 1,
+  "backoffFactor": 1.15,
+  "maxLaunchDelaySeconds": 3600,
+  "container": {
+    "docker": {
+      "image": "digitalemil/mypublicrepo:pmmlservice-0.0.2",
+      "forcePullImage": true,
+      "privileged": false,
+      "network": "HOST"
+    }
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/",
+      "gracePeriodSeconds": 8,
+      "intervalSeconds": 2,
+      "timeoutSeconds": 2,
+      "maxConsecutiveFailures": 3,
+      "ignoreHttp1xx": false
+    }
+  ],
+  "readinessChecks": null,
+  "dependencies": null,
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 1,
+    "maximumOverCapacity": 1
+  },
+  "labels": null,
+  "acceptedResourceRoles": null,
+  "residency": null,
+  "secrets": null,
+  "taskKillGracePeriodSeconds": null,
+  "portDefinitions": [
+    {
+      "protocol": "tcp",
+      "port": 10000,
+      "labels": {
+        "VIP_0": "/dcosappstudio-thegympmml-service:80"
+      },
+      "name": "http"
+    },
+    {
+      "protocol": "tcp",
+      "port": 10001,
+      "labels": {
+        "VIP_1": "/dcosappstudio-thegympmml-service:1"
+      },
+      "name": "shutdown"
+    }
+  ],
+  "requirePorts": false
+},{"volumes":[],"id":"message-validator","cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-messagevalidator-v1.0.0","network":"HOST","portMappings":null,"privileged":false,"parameters":[],"forcePullImage":true}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymmessage-validator:80"}}],"requirePorts":false},{"volumes":[],"id":"message-transformer","cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-messagetransformer-v1.0.0","network":"HOST","portMappings":null,"privileged":false,"parameters":[],"forcePullImage":true}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymmessage-transformer:80"}}],"requirePorts":false}]},{"id":"/dcosappstudio-thegym/management","apps":[{"id":"ui","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","LISTENER":"http://dcosappstudio-thegymworkerlistener.marathon.l4lb.thisdcos.directory:80/data",
+"MODELEVALUATOR":"http://dcosappstudio-thegympmml-service.marathon.l4lb.thisdcos.directory:80",
+"KAFKA_SERVICE":"master.mesos:2181/dcos-service-kafka",
+"CASSANDRA_SERVICE":"node.cassandra.l4lb.thisdcos.directory:9042",
+"PUBLICNODE":"PUBLICNODEIP",
+"CLUSTER_URL": "CLUSTER_URL_TOKEN"},
+"instances":1,"cpus":0.5, "mem":256,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:thegym-ui-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":
+{
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_VHOST": "PUBLICNODEIP",
+    "DCOS_SERVICE_SCHEME":"http","DCOS_SERVICE_NAME":"appstudio-ui-thegym","DCOS_SERVICE_PORT_INDEX":"0"},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymui:80"}}],"requirePorts":false},{"id":"loader","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","UI":"http://dcosappstudio-thegymui.marathon.l4lb.thisdcos.directory:80"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:thegym-loader-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymloader:80"}}],"requirePorts":false},
+     {"id":"kibanaproxy","volumes":[],"cmd":null,"args":null,"user":null,"env":{
+"KIBANA_SERVICE":"http://kibana:changeme@web.kibana.marathon.l4lb.thisdcos.directory:80"},
+"instances":1,
+"cpus":0.5, 
+"mem":256,
+"disk":0,
+"gpus":0,
+"executor":"",
+"constraints":[],
+"fetch":[],
+"storeUrls":[],
+"backoffSeconds":1,
+"backoffFactor":1.15,
+"maxLaunchDelaySeconds":3600,
+"container":{"type":"DOCKER","volumes":[],"docker":{"image":"digitalemil/mypublicrepo:dcosappstudio-kibanaproxy-v1.0.0","network":"HOST","portMappings":[],"privileged":false,"parameters":[],"forcePullImage":true}},
+"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],
+"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},
+"labels":
+{
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_VHOST": "$PUBLICNODEIP"
+    },
+    "acceptedResourceRoles":null,
+    "ipAddress":null,"residency":null,"secrets":{},
+    "taskKillGracePeriodSeconds":null,
+    "portDefinitions":[{"port":10339,"protocol":"tcp","name":"myp",
+    "labels":{"VIP_0":"/dcosappstudio-kibanaproxy:80"}}],"requirePorconnectedcaruits":false}]}]}

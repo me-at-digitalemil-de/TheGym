@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML version="4.2" xmlns="http://www.dmg.org/PMML-4_2">
+    <Header description="logistic regression">
+        <Application name="Apache Spark MLlib" version="1.6.1"/>
+        <Timestamp>2017-07-20T09:03:50</Timestamp>
+    </Header>
+    <DataDictionary numberOfFields="3">
+        <DataField name="deviceid" optype="continuous" dataType="double"/>
+        <DataField name="heartrate" optype="continuous" dataType="double"/>
+        <DataField name="target" optype="categorical" dataType="string"/>
+    </DataDictionary>
+    <RegressionModel modelName="logistic regression" functionName="classification" normalizationMethod="logit">
+        <MiningSchema>
+            <MiningField name="deviceid" usageType="active"/>
+            <MiningField name="heartrate" usageType="active"/>
+            <MiningField name="target" usageType="target"/>
+        </MiningSchema>
+        <RegressionTable intercept="0.0" targetCategory="1">
+            <NumericPredictor name="deviceid" coefficient="-1.1506950902364852"/>
+            <NumericPredictor name="heartrate" coefficient="156.97957922457476"/>
+        </RegressionTable>
+        <RegressionTable intercept="-0.0" targetCategory="0"/>
+    </RegressionModel>
+</PMML>

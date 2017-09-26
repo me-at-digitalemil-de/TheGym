@@ -1,0 +1,1 @@
+curl -X POST -d '' http://PUBLIC_SLAVE_ELB_HOSTNAME:10000/model
