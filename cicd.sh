@@ -70,11 +70,10 @@ echo -n "Where shall I clone to? (When prompted for password: \"rootroot\") > "
 read dir
 echo Now I am going to clone the repo and install the app. This will take a couple of minutes, please come back after the browser opened a window with the running app.
 mkdir -p $dir
-folder=$dir/TheGym
 cd $dir
 git clone http://root@gitlab.thegym.mesosphere.io/root/TheGym.git
 cd TheGym
-./install-thegym-1.10.sh 
+./install-thegym.sh 
 echo We are setting up Jenkins now. 
 read -p "Press button when ready." -n1 -s
 open $DCOS_URL/service/jenkins/configure
