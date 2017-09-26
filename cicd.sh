@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export APP=TheGym
+export APPLOWERCASE=thegym
+
 export DCOS_URL=$(dcos config show core.dcos_url)
 echo DCOS_URL: $DCOS_URL
 
@@ -30,13 +33,14 @@ cp gitlab.json.template gitlab.json
 sed -ie "s@\$PINNEDNODE@$PRIVATENODEIP@g;" gitlab.json
 
 sed  '/gitlab/d' /etc/hosts >./hosts
-echo "$PUBLICNODEIP gitlab.thegym.mesosphere.io" >>./hosts
-echo We are going to add "$PUBLICNODEIP gitlab.thegym.mesosphere.io" to your /etc/host. So therefore we need your local password.
+echo "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" >>./hosts
+echo We are going to add "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" to your /etc/host. Therefore we need your local password.
 sudo mv hosts /etc/hosts
 
+echo Installing gitlab...
 dcos marathon app add gitlab.json
 
-until $(curl --output /dev/null --silent --head --fail http://gitlab.thegym.mesosphere.io); do
+until $(curl --output /dev/null --silent --head --fail http://gitlab.$APPLOWERCASE.mesosphere.io); do
     printf '.'
     sleep 5
 done
@@ -44,7 +48,7 @@ done
 echo I am going to open a browser window to gitlab. Please set the root user password there to \"rootroot\" and confirm it with \"rootroot\"
 echo Afterwards please logon to gitlab \(in the browser\) as user \"root\" with password \"rootroot\"
 echo When done please come back.
-open http://gitlab.thegym.mesosphere.io
+open http://gitlab.$APPLOWERCASE.mesosphere.io
 read -p "Press key when you set the password and are logged in as root." -n1 -s 
 echo
 echo On the bottom of the gitlab webpage is a green button \"New Project\". Please press it.
@@ -57,10 +61,10 @@ echo Here comes your \"Personal Access Token\":
 echo Please copy the github token provided elsewhere and paste it into the browser form. Then press the green \"List Your GitHub Repositories\" button.
 read -p "Press button when done." -n1 -s
 echo
-echo You can see all the existing projects now. Please look for \"digitalemil/TheGym\" and press the \"Import\" button on the right.
+echo You can see all the existing projects now. Please look for \"$APP\" and press the \"Import\" button on the right.
 read -p "Press button when done." -n1 -s
 echo
-echo After a while the row with \"TheGym\" turns green. Please click the link \"root/TheGym\" in the "To GitLab" column.
+echo After a while the row with \"$APP\" turns green. Please click the link \"root/$APP\" in the "To GitLab" column.
 echo Congratulations! We are done setting up gitlab.
 echo We will now clone the repo to a location you specify \(./tmp is a good candidate\).
 echo -n "Where shall I clone to? (When prompted for password: \"rootroot\") > "
@@ -68,13 +72,14 @@ read dir
 echo Now I am going to clone the repo and install the app. This will take a couple of minutes, please come back after the browser opened a window with the running app.
 mkdir -p $dir
 cd $dir
-git clone http://root@gitlab.thegym.mesosphere.io/root/TheGym.git
-cd TheGym
-./install-thegym.sh 
+git clone http://root@gitlab.$APPLOWERCASE.mesosphere.io/root/$APP.git
+cd $APP
+./install-$APPLOWERCASE.sh 
+echo
 echo We are setting up Jenkins now. 
 read -p "Press button when ready." -n1 -s
 open $DCOS_URL/service/jenkins/configure
-echo Please add a global environment variable \(under Global properties\) called: DOCKERHUB_REPO and set it to your dockerhub account \(e.g. my is digitalemil\) plus: /thegym
+echo Please add a global environment variable \(under Global properties\) called: DOCKERHUB_REPO and set it to your dockerhub account \(e.g. my is digitalemil\) plus: /$APPLOWERCASE
 echo Then press: Save
 read -p "Press button when ready." -n1 -s
 echo Now let us connect Jenkins to gitlab which runs in DC/DCOS_URL
@@ -83,15 +88,15 @@ open $DCOS_URL/service/jenkins/credentials/store/system/domain/_/newCredentials
 read -p "Press button when ready." -n1 -s
 echo We also need to provide Jenkins with your dockerhub username and password. 
 echo id: dockerhub 
-echo Please fill them in:
 open $DCOS_URL/service/jenkins/credentials/store/system/domain/_/newCredentials
 read -p "Press button when ready." -n1 -s
-echo Next step is to create the build pipleine. In the browser window please call the item TheGm and select Pipeline as type and then press OK
+echo
+echo Next step is to create the build pipleine. In the browser window please call the item $APP and select Pipeline as type and then press OK
 open $DCOS_URL/service/jenkins/view/all/newJob
 read -p "Press button when ready." -n1 -s
-echo Now check Poll SCM and use * * * * * as schedule. Press Apply. Scroll down to Pipeline and select "Pipeline script from SCM". Select Git as SCM
+echo Now check Poll SCM and use \"* * * * *\" as schedule. Press Apply. Scroll down to Pipeline and select \"Pipeline script from SCM\". Select Git as SCM
 read -p "Press button when ready." -n1 -s
-echo Next we need to define the repository. Please enter http://gitlab.marathon.l4lb.thisdcos.directory/root/TheGym.git as Repository URL and select root/******** as credentials. Press Apply
+echo Next we need to define the repository. Please enter http://gitlab.marathon.l4lb.thisdcos.directory/root/$APP.git as Repository URL and select root/******** as credentials. Press Apply
 echo We are all set now. Thank you for your patience. You can now start build pipelines in Jenkins or call the upgrade.sh or downgrade.sh script in the folder where we cloned the repo.
 echo Good luck!
 
