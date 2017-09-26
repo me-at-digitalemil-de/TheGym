@@ -9,7 +9,7 @@
     [
       "hostname",
       "CLUSTER",
-      "$PINNEDHOST"
+      "$PINNEDNODE"
     ]
   ],
   "container": {
