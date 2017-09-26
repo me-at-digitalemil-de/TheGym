@@ -45,6 +45,7 @@ until $(curl --output /dev/null --silent --head --fail http://gitlab.$APPLOWERCA
     sleep 5
 done
 
+echo
 echo I am going to open a browser window to gitlab. Please set the root user password there to \"rootroot\" and confirm it with \"rootroot\"
 echo Afterwards please logon to gitlab \(in the browser\) as user \"root\" with password \"rootroot\"
 echo When done please come back.
