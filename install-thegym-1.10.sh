@@ -43,6 +43,12 @@ cp clearmodel.template clearmodel.sh
 sed -ie "s@PUBLIC_SLAVE_ELB_HOSTNAME@$PUBLICNODEIP@g" clearmodel.sh
 rm clearmodel.she
 
+cp versions/ui-config.json ui-config.tmp
+sed -ie "s@PUBLIC_SLAVE_ELB_HOSTNAME@$PUBLICELBHOST@g; s@PUBLICNODEIP@$PUBLICNODEIP@g;"  ui-config.tmp
+
+cp versions/elastic-config.json elastic-config.tmp
+sed -ie "s@PUBLIC_SLAVE_ELB_HOSTNAME@$PUBLICELBHOST@g; s@PUBLICNODEIP@$PUBLICNODEIP@g;"  elastic-config.tmp
+
 dcos marathon group add config.tmp
 until $(curl --output /dev/null --silent --head --fail http://$PUBLICNODEIP:10000); do
     printf '.'
