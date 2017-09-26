@@ -34,7 +34,7 @@ sed -ie "s@\$PINNEDNODE@$PRIVATENODEIP@g;" gitlab.json
 
 sed  '/gitlab/d' /etc/hosts >./hosts
 echo "$PUBLICNODEIP gitlab.thegym.mesosphere.io" >>./hosts
-echo We are going to add "$PUBLICNODEIP gitlab.thegym.mesosphere.io" to your /etc/host. So therefore we need your password:
+echo We are going to add "$PUBLICNODEIP gitlab.thegym.mesosphere.io" to your /etc/host. So therefore we need your local password.
 sudo mv hosts /etc/hosts
 
 dcos marathon app add gitlab.json
@@ -73,7 +73,7 @@ mkdir -p $dir
 cd $dir
 git clone http://root@gitlab.thegym.mesosphere.io/root/TheGym.git
 cd TheGym
-echo y | ./install-thegym-1.10.sh 
+./install-thegym-1.10.sh 
 echo We are setting up Jenkins now. 
 read -p "Press button when ready." -n1 -s
 open $DCOS_URL/service/jenkins/configure

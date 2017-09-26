@@ -14,18 +14,12 @@ then
 	exit -1
 fi
 
-read -p "Install services? (y/n) " -n1 -s c
-if [ "$c" = "y" ]; then
-	echo yes
-	 dcos package install --yes marathon-lb --package-version=1.10.1
-     dcos package install --yes cassandra --package-version=2.0.0-3.0.14
-     dcos package install --yes kafka --package-version=2.0.0-0.11.0.0
-     dcos package install --yes elastic --package-version=2.0.0-5.5.1 --options=elastic-config.json
-     dcos package install --options=kibana-config.json --yes kibana --package-version=2.0.0-5.5.1
-	 dcos package install --yes zeppelin --package-version=0.6.0		
-else
-	echo no
-fi
+dcos package install --yes marathon-lb --package-version=1.10.1
+dcos package install --yes cassandra --package-version=2.0.0-3.0.14
+dcos package install --yes kafka --package-version=2.0.0-0.11.0.0
+dcos package install --yes elastic --package-version=2.0.0-5.5.1 --options=elastic-config.json
+dcos package install --options=kibana-config.json --yes kibana --package-version=2.0.0-5.5.1
+dcos package install --yes zeppelin --package-version=0.6.0		
 
 seconds=0
 OUTPUT=0
