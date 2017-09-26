@@ -70,6 +70,7 @@ echo -n "Where shall I clone to? (When prompted for password: \"rootroot\") > "
 read dir
 echo Now I am going to clone the repo and install the app. This will take a couple of minutes, please come back after the browser opened a window with the running app.
 mkdir -p $dir
+folder=$dir/TheGym
 cd $dir
 git clone http://root@gitlab.thegym.mesosphere.io/root/TheGym.git
 cd TheGym
@@ -79,15 +80,22 @@ read -p "Press button when ready." -n1 -s
 open $DCOS_URL/service/jenkins/configure
 echo Please add a global environment variable \(under Global properties\) called: DOCKERHUB_REPO and set it to your dockerhub account \(e.g. my is digitalemil\) plus: /thegym
 echo Then press: Save
+read -p "Press button when ready." -n1 -s
 echo Now let us connect Jenkins to gitlab which runs in DC/DCOS_URL
 echo First we need to create credentials for gitlab. Please use root as username and rootroot as password, id should read gitlab
 open $DCOS_URL/service/jenkins/credentials/store/system/domain/_/newCredentials
-echo We also need to provide Jenkins with your dockerhub account and password. Please fill them in:
+read -p "Press button when ready." -n1 -s
+echo We also need to provide Jenkins with your dockerhub username and password. 
+echo id: dockerhub 
+echo Please fill them in:
 open $DCOS_URL/service/jenkins/credentials/store/system/domain/_/newCredentials
+read -p "Press button when ready." -n1 -s
 echo Next step is to create the build pipleine. In the browser window please call the item TheGm and select Pipeline as type and then press OK
 open $DCOS_URL/service/jenkins/view/all/newJob
+read -p "Press button when ready." -n1 -s
 echo Now check Poll SCM and use * * * * * as schedule. Press Apply. Scroll down to Pipeline and select "Pipeline script from SCM". Select Git as SCM
+read -p "Press button when ready." -n1 -s
 echo Next we need to define the repository. Please enter http://gitlab.marathon.l4lb.thisdcos.directory/root/TheGym.git as Repository URL and select root/******** as credentials. Press Apply
-echo We are all set now. Thank you for your patience. You can now start build pipelines in Jenkins or call the upgrade.sh or downgrade.sh script in the folder $dir.
+echo We are all set now. Thank you for your patience. You can now start build pipelines in Jenkins or call the upgrade.sh or downgrade.sh script in the folder where we cloned the repo.
 echo Good luck!
 
