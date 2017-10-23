@@ -188,6 +188,8 @@ router.get('/dashboard.html', function(req, res, next) {
 router.get('/zeppelinframe.html', function(req, res, next) {
   console.log('Zeppelin');
   let cu= process.env.CLUSTER_URL;
+  console.log("Zeppelin target: "+cu);
+  
   res.render('zeppelinframe', { table: appdef.table, keyspace: appdef.keyspace, clusterurl: cu});
 });
 

@@ -6,8 +6,21 @@ export APPLOWERCASE=thegym
 export DCOS_URL=$(dcos config show core.dcos_url)
 echo DCOS_URL: $DCOS_URL
 
-dcos package install --yes marathon-lb --package-version=1.10.1
+dcos package install --yes --cli dcos-enterprise-cli
 dcos package install --yes jenkins --package-version=3.2.3-2.60.2
+dcos package repo add --index=0 edgelb-aws https://edge-lb-infinity-artifacts.s3.amazonaws.com/autodelete7d/master/edgelb/stub-universe-edgelb.json
+dcos package repo add --index=0 edgelb-pool-aws https://edge-lb-infinity-artifacts.s3.amazonaws.com/autodelete7d/master/edgelb-pool/stub-universe-edgelb-pool.json
+dcos security org service-accounts keypair edgelb-private-key.pem edgelb-public-key.pem
+dcos security org service-accounts create -p edgelb-public-key.pem -d "edgelb service account" edgelb-principal
+dcos security org groups add_user superusers edgelb-principal
+dcos security secrets create-sa-secret --strict edgelb-private-key.pem edgelb-principal edgelb-secret
+rm -f edgelb-private-key.pem
+rm -f edgelb-public-key.pem
+dcos package install --options=edgelb-options.json edgelb --yes
+dcos package install edgelb-pool --cli --yes
+echo "Waiting for edge-lb to come up ..."
+until dcos edgelb ping; do sleep 1; done
+dcos edgelb config edge-lb-pool-cicd-direct.yaml
 
 echo Determing public node ip...
 export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )
@@ -34,7 +47,7 @@ sed -ie "s@\$PINNEDNODE@$PRIVATENODEIP@g;" gitlab.json
 
 sed  '/gitlab/d' /etc/hosts >./hosts
 echo "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" >>./hosts
-echo We are going to add "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" to your /etc/host. Therefore we need your local password.
+echo We are going to add "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" to your /etc/hosts. Therefore we need your local password.
 sudo mv hosts /etc/hosts
 
 echo Installing gitlab...
@@ -103,6 +116,6 @@ echo Now check Poll SCM and use "* * * * *" as schedule. Press Apply. Scroll dow
 read -p "Press button when ready." -n1 -s
 echo
 echo Next we need to define the repository. Please enter http://gitlab.marathon.l4lb.thisdcos.directory/root/$APP.git as Repository URL and select root/******** as credentials. Press Apply
-echo We are all set now. Thank you for your patience. You can now start build pipelines in Jenkins or call the upgrade.sh or downgrade.sh script in the folder where we cloned the repo.
+echo We are all set now. Thank you for your patience. You can now start build-pipelines by executing the upgrade.sh or downgrade.sh script in the folder where we cloned the repo into.
 echo Good luck!
 
