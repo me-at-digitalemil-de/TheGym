@@ -59,18 +59,11 @@ cp clearmodel.template clearmodel.sh
 sed -ie "s@PUBLIC_SLAVE_ELB_HOSTNAME@$PUBLICNODEIP@g" clearmodel.sh
 rm clearmodel.she
 
-cp versions/ui-config.json ui-config.tmp
-sed -ie "s@CLUSTER_URL_TOKEN@$DCOS_URL@g;"  ui-config.tmp
-sed -ie "s@PUBLIC_IP_TOKEN@$PUBLICNODEIP@g;"  ui-config.tmp
-
-
-cp versions/elastic-config.json elastic-config.tmp
-
 dcos marathon group add config.tmp
-until $(curl --output /dev/null --silent --head --fail http://$PUBLICNODEIP:10000); do
+until $(curl --output /dev/null --silent --head --fail http://$PUBLICNODEIP); do
     printf '.'
     sleep 5
 done
 ./permissions.sh ./config.json
-open http://$PUBLICNODEIP:10000
+open http://$PUBLICNODEIP
 rm config.tmpe config.tmp

@@ -8,6 +8,8 @@ var http2 = require("http").Server(app);
 var fs = require('fs');
 var formidable = require('formidable');
 
+let lastversion= null;
+
 let modeltopic= "thegym-model";
 let modelevaluator= process.env.MODELEVALUATOR;
 let model= "";
@@ -99,6 +101,9 @@ router.get('/bgimage.html', function(req, res, next) {
   res.render('bgimage', { title: 'DCOS AppStudio' });
 });
 
+router.get('/arch.html', function(req, res, next) {
+  res.render('arch', { title: 'DCOS AppStudio' });
+});
 
 router.get('/zeppelin.html', function(req, res, next) {
 let obj= require("/"+process.env.APPDIR+"/zeppelin-notebook.json");
@@ -149,8 +154,35 @@ router.get('/version.html', function(req, res, next) {
   if(appsecret==undefined) {
     appsecret="Secret undefined. Please set the APPSECRET environment variable.";
   }
-
-  res.render('version', { secret: appsecret});
+  try {
+    request.get(process.env.UISERVICE+"/version", function(err, response, body) {
+      let version= "";
+      if(err==null) {
+        version= body;
+        lastversion= version;
+      }
+      else {
+        console.log(err);
+        if(lastversion== null) {
+          version= "1.0.0";
+        }
+        else 
+          version= lastversion;
+      }
+      console.log("Version "+version);
+      console.log("body: "+body);
+      res.render('version', { secret: appsecret, version: version});    
+    });
+  }
+  catch(ex) {
+    if(lastversion== null) {
+      version= "1.0.0";
+    }
+    else
+      version= lastversion;
+    console.log("CATCH Version "+version);  
+    res.render('version', { secret: appsecret, version: version});  
+  }
 });
 
 router.get('/', function(req, res, next) {

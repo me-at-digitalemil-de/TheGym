@@ -20,7 +20,7 @@ dcos package install --options=edgelb-options.json edgelb --yes
 dcos package install edgelb-pool --cli --yes
 echo "Waiting for edge-lb to come up ..."
 until dcos edgelb ping; do sleep 1; done
-dcos edgelb config edge-lb-pool-cicd-direct.yaml
+dcos edgelb config edge-lb-pool-direct.yaml
 
 echo Determing public node ip...
 export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )
@@ -53,7 +53,7 @@ sudo mv hosts /etc/hosts
 echo Installing gitlab...
 dcos marathon app add gitlab.json
 
-until $(curl --output /dev/null --silent --head --fail http://gitlab.$APPLOWERCASE.mesosphere.io); do
+until $(curl --output /dev/null --silent --head --fail http://gitlab.$APPLOWERCASE.mesosphere.io:10080); do
     printf '.'
     sleep 5
 done
@@ -62,7 +62,7 @@ echo
 echo I am going to open a browser window to gitlab. Please set the root user password there to \"rootroot\" and confirm it with \"rootroot\"
 echo Afterwards please logon to gitlab \(in the browser\) as user \"root\" with password \"rootroot\"
 echo When done please come back.
-open http://gitlab.$APPLOWERCASE.mesosphere.io
+open http://gitlab.$APPLOWERCASE.mesosphere.io:10080
 read -p "Press key when you set the password and are logged in as root." -n1 -s 
 echo
 echo On the bottom of the gitlab webpage is a green button \"New Project\". Please press it.
@@ -86,7 +86,7 @@ read dir
 echo Now I am going to clone the repo and install the app. This will take a couple of minutes, please come back after the browser opened a window with the running app.
 mkdir -p $dir
 cd $dir
-git clone http://root@gitlab.$APPLOWERCASE.mesosphere.io/root/$APP.git
+git clone http://root@gitlab.$APPLOWERCASE.mesosphere.io:10080/root/$APP.git
 cd $APP
 ./install-$APPLOWERCASE.sh 
 echo

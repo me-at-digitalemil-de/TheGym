@@ -1,23 +1,49 @@
 ---
 pools:
-  - name: connected-car
+  - name: thegym
     count: 1
     haproxy:
       frontends:
+        - bindPort: 10080
+          protocol: HTTP
+          linkBackend:
+            defaultBackend: gitlab
+        - bindPort: 10000
+          protocol: HTTP
+          linkBackend:
+            defaultBackend: jenkins
         - bindPort: 80
           protocol: HTTP
           linkBackend:
-            defaultBackend: connected-car-ui
+            defaultBackend: thegym-ui
         - bindPort: 10500
           protocol: TCP
           linkBackend:
-            defaultBackend: connected-car-socket
+            defaultBackend: thegym-socket
         - bindPort: 10339
           protocol: HTTP
           linkBackend:
             defaultBackend: kibana
       backends:
-        - name: connected-car-ui
+        - name: gitlab
+          protocol: HTTP
+          servers:
+            - framework:
+                value: marathon
+              task:
+                value: gitlab
+              port:
+                name: web
+        - name: jenkins
+          protocol: HTTP
+          servers:
+            - framework:
+                value: marathon
+              task:
+                value: jenkins
+              port:
+                name: nginx
+        - name: thegym-ui
           protocol: HTTP
           servers:
             - framework:
@@ -25,8 +51,8 @@ pools:
               task:
                 value: ui.management.dcosappstudio-connectedcar
               port:
-                name: connected-car-ui
-        - name: connected-car-socket
+                name: myp
+        - name: thegym-socket
           protocol: TCP
           servers:
             - framework:
@@ -34,7 +60,7 @@ pools:
               task:
                 value: ui.management.dcosappstudio-connectedcar
               port:
-                name: connected-car-socket
+                name: socket
         - name: kibana
           protocol: HTTP
           miscStrs:
