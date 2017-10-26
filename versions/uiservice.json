@@ -5,9 +5,9 @@
       "args": null,
       "user": null,
       "env": { "APPDIR":"/opt/app" },
-  "instances": 3,
+  "instances": 1,
       "cpus": 0.1,
-      "mem": 512,
+      "mem": 128,
       "disk": 0,
       "gpus": 0,
       "executor": "",
@@ -58,7 +58,7 @@
           "protocol": "tcp",
           "name": "myp",
           "labels": {
-              "VIP_0": "dcosappstudio-frauddetectionuiservice:80"
+              "VIP_0": "dcosappstudio-thegymuiservice:80"
           }
       }],
       "requirePorts": true

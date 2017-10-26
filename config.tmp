@@ -79,15 +79,15 @@
 "MODELEVALUATOR":"http://dcosappstudio-thegympmml-service.marathon.l4lb.thisdcos.directory:80",
 "KAFKA_SERVICE":"master.mesos:2181/dcos-service-kafka",
 "CASSANDRA_SERVICE":"node.cassandra.l4lb.thisdcos.directory:9042",
-"PUBLICNODE":"PUBLICNODEIP",
-"CLUSTER_URL": "CLUSTER_URL_TOKEN",
+"PUBLICNODE":"34.213.252.90",
+"CLUSTER_URL": "https://esiemes-a-elasticl-98n3ufisdvrm-273667332.us-west-2.elb.amazonaws.com/",
 "UISERVICE":"http://dcosappstudio-thegymuiservice.marathon.l4lb.thisdcos.directory:80"
 },
 "instances":1,"cpus":0.5, "mem":512,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"MESOS","volumes":[],"docker":
   {"image":"mesosphere/dcosappstudio:thegym-safeharbor-ui-v1.0.0","portMappings":null,"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":
 {
     "HAPROXY_GROUP": "external",
-    "HAPROXY_0_VHOST": "PUBLICNODEIP",
+    "HAPROXY_0_VHOST": "34.213.252.90",
     "DCOS_SERVICE_SCHEME":"http","DCOS_SERVICE_NAME":"appstudio-ui-thegym","DCOS_SERVICE_PORT_INDEX":"0"},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymui:80"}}],"requirePorts":false},{"id":"loader","volumes":[],"cmd":null,"args":null,"user":null,"env":{"APPDEF":"{'name':'The Gym','showLocation':true,'fields':[{'name':'heartrate','pivot':'true','type':'Integer'},{'name':'user','pivot':false,'type':'String'},{'name':'deviceid','pivot':false,'type':'String'},{'name':'color','pivot':false,'type':'String'},{'name':'id','type':'Long','pivot':'false'},{'name':'location','type':'Location','pivot':'false'},{'name':'event_timestamp','type':'Date/time','pivot':'false'}],'transformer':'%0A%09result%3D%20rawtext%3B%0A%09%09%09%09%09%0A%09%09%09%09%09','topic':'hr','table':'hr','keyspace':'thegym','path':'thegym','creator':'http://localhost:3000'}","UI":"http://dcosappstudio-thegymui.marathon.l4lb.thisdcos.directory:80"},"instances":1,"cpus":0.1,"mem":128,"disk":0,"gpus":0,"executor":"","constraints":[],"fetch":[],"storeUrls":[],"backoffSeconds":1,"backoffFactor":1.15,"maxLaunchDelaySeconds":3600,"container":{"type":"MESOS","volumes":[],"docker":
       {"image":"mesosphere/dcosappstudio:thegym-safeharbor-loader-v1.0.0","portMappings":null,"privileged":false,"parameters":[],"forcePullImage":false}},"healthChecks":[{"protocol":"HTTP","path":"/","gracePeriodSeconds":2,"intervalSeconds":5,"timeoutSeconds":2,"maxConsecutiveFailures":4,"portIndex":0,"ignoreHttp1xx":false}],"readinessChecks":[],"dependencies":[],"upgradeStrategy":{"minimumHealthCapacity":1,"maximumOverCapacity":1},"labels":{},"acceptedResourceRoles":null,"ipAddress":null,"residency":null,"secrets":{},"taskKillGracePeriodSeconds":null,"portDefinitions":[{"port":10000,"protocol":"tcp","name":"myp","labels":{"VIP_0":"/dcosappstudio-thegymloader:80"}}],"requirePorts":false},
     {

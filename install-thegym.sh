@@ -7,7 +7,6 @@ echo Determing public node ip...
 export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )
 echo Public node ip: $PUBLICNODEIP 
 echo ------------------
-
 if [ ${#PUBLICNODEIP} -le 6 ] ;
 then
 	echo Can not find public node ip. JQ in path?
