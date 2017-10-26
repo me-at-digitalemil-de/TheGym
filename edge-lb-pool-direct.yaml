@@ -49,7 +49,7 @@ pools:
             - framework:
                 value: marathon
               task:
-                value: ui.management.dcosappstudio-connectedcar
+                value: ui.management.dcosappstudio-thegym
               port:
                 name: myp
         - name: thegym-socket
@@ -58,7 +58,7 @@ pools:
             - framework:
                 value: marathon
               task:
-                value: ui.management.dcosappstudio-connectedcar
+                value: ui.management.dcosappstudio-thegym
               port:
                 name: socket
         - name: kibana
