@@ -6,6 +6,35 @@ export APPLOWERCASE=thegym
 export DCOS_URL=$(dcos config show core.dcos_url)
 echo DCOS_URL: $DCOS_URL
 
+echo Determing public node ip...
+export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )
+echo Public node ip: $PUBLICNODEIP
+echo ---------------
+
+echo Private node ip: $PRIVATENODEIP
+if [ ${#PUBLICNODEIP} -le 6 ] ;
+then
+        echo Can not find a priavte node ip. JQ in path?
+        exit -1
+fi
+echo ---------------
+
+cp gitlab.json.template gitlab.json
+sed -ie "s@\$PINNEDNODE@$PRIVATENODEIP@g;" gitlab.json
+
+sed  '/gitlab/d' /etc/hosts >./hosts
+echo "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" >>./hosts
+echo We are going to add "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" to your /etc/hosts. Therefore we need your local password.
+sudo mv hosts /etc/hosts
+
+echo Installing gitlab...
+dcos marathon app add gitlab.json
+
+dcos package install --yes --cli dcos-enterprise-cli
+dcos package install --yes cassandra --package-version=1.0.25-3.0.10
+dcos package install --yes kafka --package-version=1.1.19.1-0.10.1.0
+dcos package install --yes elastic --package-version=2.0.0-5.5.1 --options=elastic-config.json
+dcos package install --options=kibana-config.json --yes kibana --package-version=2.0.0-5.5.1
 dcos package install --yes --cli dcos-enterprise-cli
 dcos package install --yes jenkins --package-version=3.2.3-2.60.2
 dcos package repo add --index=0 edgelb-aws https://edge-lb-infinity-artifacts.s3.amazonaws.com/autodelete7d/master/edgelb/stub-universe-edgelb.json
@@ -22,40 +51,7 @@ echo "Waiting for edge-lb to come up ..."
 until dcos edgelb ping; do sleep 1; done
 dcos edgelb config edge-lb-pool-direct.yaml
 
-echo Determing public node ip...
-export PUBLICNODEIP=$(./findpublic_ips.sh | head -1 | sed "s/.$//" )
-echo Public node ip: $PUBLICNODEIP
-echo ---------------
-if [ ${#PUBLICNODEIP} -le 6 ] ;
-then
-        echo Can not find public node ip. JQ in path?
-        exit -1
-fi
-
-PRIVATENODEIP=$(./findprivate_ips.sh | tail -1)
-echo Private node ip: $PRIVATENODEIP
-if [ ${#PUBLICNODEIP} -le 6 ] ;
-then
-        echo Can not find a priavte node ip. JQ in path?
-        exit -1
-fi
-echo ---------------
-cp gitlab.json.template gitlab.json
-
-sed -ie "s@\$PINNEDNODE@$PRIVATENODEIP@g;" gitlab.json
-
-sed  '/gitlab/d' /etc/hosts >./hosts
-echo "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" >>./hosts
-echo We are going to add "$PUBLICNODEIP gitlab.$APPLOWERCASE.mesosphere.io" to your /etc/hosts. Therefore we need your local password.
-sudo mv hosts /etc/hosts
-
-echo Installing gitlab...
-dcos marathon app add gitlab.json
-
-until $(curl --output /dev/null --silent --head --fail http://gitlab.$APPLOWERCASE.mesosphere.io:10080); do
-    printf '.'
-    sleep 5
-done
+	
 
 echo
 echo I am going to open a browser window to gitlab. Please set the root user password there to \"rootroot\" and confirm it with \"rootroot\"
@@ -87,7 +83,6 @@ mkdir -p $dir
 cd $dir
 git clone http://root@gitlab.$APPLOWERCASE.mesosphere.io:10080/root/$APP.git
 cd $APP
-./install-$APPLOWERCASE.sh 
 echo
 echo We are setting up Jenkins now. 
 read -p "Press button when ready." -n1 -s
@@ -115,6 +110,7 @@ echo Now check Poll SCM and use "* * * * *" as schedule. Press Apply. Scroll dow
 read -p "Press button when ready." -n1 -s
 echo
 echo Next we need to define the repository. Please enter http://gitlab.marathon.l4lb.thisdcos.directory/root/$APP.git as Repository URL and select root/******** as credentials. Press Apply
+read -p "Press button when ready." -n1 -s
 echo We are all set now. Thank you for your patience. You can now start build-pipelines by executing the upgrade.sh or downgrade.sh script in the folder where we cloned the repo into.
 echo Good luck!
-
+./install-$APPLOWERCASE.sh

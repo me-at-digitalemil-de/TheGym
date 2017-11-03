@@ -9,6 +9,7 @@ var fs = require('fs');
 var formidable = require('formidable');
 
 let lastversion= null;
+let lastsecret= null;
 
 let modeltopic= "thegym-model";
 let modelevaluator= process.env.MODELEVALUATOR;
@@ -150,24 +151,32 @@ var downloadBGImage = function(callback){
 downloadBGImage(handleImageDownload);
 
 router.get('/version.html', function(req, res, next) {
-  let appsecret= process.env.APPSECRET;
-  if(appsecret==undefined) {
-    appsecret="Secret undefined. Please set the APPSECRET environment variable.";
-  }
+  let appsecret= "";
+  let version= "";
+  
   try {
     request.get(process.env.UISERVICE+"/version", function(err, response, body) {
-      let version= "";
       if(err==null) {
-        version= body;
+        let result= body.split(",");
+        version= result[0];
+        appsecret= result[1];
         lastversion= version;
+        lastsecret= appsecret;
       }
       else {
         console.log(err);
         if(lastversion== null) {
           version= "1.0.0";
         }
-        else 
+        else {
           version= lastversion;
+        }
+        if(lastsecret== null) {
+            appsecret= "";
+        }
+        else { 
+            appsecret= lastsecret;
+        }
       }
       console.log("Version "+version);
       console.log("body: "+body);
@@ -178,8 +187,16 @@ router.get('/version.html', function(req, res, next) {
     if(lastversion== null) {
       version= "1.0.0";
     }
-    else
+    else {
       version= lastversion;
+    }
+    if(lastsecret== null) {
+      appsecret= "";
+    }
+    else { 
+      appsecret= lastsecret;
+    }
+
     console.log("CATCH Version "+version);  
     res.render('version', { secret: appsecret, version: version});  
   }
