@@ -22,5 +22,5 @@ export PMML='<PMML version="4.2" xmlns="http://www.dmg.org/PMML-4_2">
     </RegressionModel>
 </PMML>'
 echo $PMML>model.tmp
-curl -X POST -d @model.tmp  http://PUBLIC_SLAVE_ELB_HOSTNAME:10000/model
+curl -X POST -d @model.tmp  http://PUBLIC_SLAVE_ELB_HOSTNAME/model
 rm model.tmp
